@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ATSMUS | Cellular Defense Ecosystem & Airspace Dominance</title>
+  <meta name="description" content="Global leader in cellular-driven defense technologies: Assured PNT for GPS-denied drone autonomy and zero-emission passive bistatic air defense." />
+
+  <!-- Aerospace Typography: Space Grotesk, Plus Jakarta Sans, JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Three.js for 3D Defense Tactical Visualization -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              void: '#020408',
+              surface: '#050913',
+              panel: '#090E1A',
+              card: 'rgba(10, 16, 30, 0.75)',
+              slate: '#070B14',
+              slateElevated: '#0D1322',
+              slateCard: '#111A2E',
+              border: '#1B253B',
+              borderLight: 'rgba(255, 255, 255, 0.08)',
+              accent: '#ff5511',
+              cyan: '#00E5FF',
+              cyanGlow: 'rgba(0, 229, 255, 0.25)',
+              amber: '#FF9900',
+              amberGlow: 'rgba(255, 153, 0, 0.25)',
+              emerald: '#10B981',
+              muted: '#6B7A94'
+            }
+          },
+          fontFamily: {
+            display: ['"Space Grotesk"', '-apple-system', 'sans-serif'],
+            sans: ['"Plus Jakarta Sans"', '-apple-system', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          },
+          letterSpacing: {
+            widestPlus: '0.24em',
+            extreme: '0.36em'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    html, body {
+      background-color: #020408;
+      color: #F1F5F9;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    h1, h2, h3, h4, .font-display {
+      font-family: 'Space Grotesk', sans-serif;
+      letter-spacing: -0.035em;
+    }
+
+    /* Ambient Hero Spotlight Gradients */
+    .hero-glow-radial {
+      background: 
+        radial-gradient(ellipse 80% 60% at 50% -15%, rgba(0, 229, 255, 0.18) 0%, rgba(255, 85, 17, 0.05) 45%, rgba(2, 4, 8, 0) 80%),
+        radial-gradient(circle at 85% 35%, rgba(0, 229, 255, 0.08) 0%, transparent 60%);
+    }
+
+    /* Aerospace Glassmorphism */
+    .glass-nav {
+      background: rgba(2, 4, 8, 0.88);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .glass-card {
+      background: linear-gradient(180deg, rgba(14, 21, 38, 0.7) 0%, rgba(7, 12, 22, 0.85) 100%);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .glass-card:hover {
+      border-color: rgba(255, 255, 255, 0.22);
+      transform: translateY(-2px);
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.85);
+    }
+
+    .glass-card-cyan:hover {
+      border-color: rgba(0, 229, 255, 0.45);
+      box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.9), 0 0 35px -8px rgba(0, 229, 255, 0.22);
+    }
+
+    .glass-card-amber:hover {
+      border-color: rgba(255, 153, 0, 0.45);
+      box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.9), 0 0 35px -8px rgba(255, 153, 0, 0.22);
+    }
+
+    .grid-pattern {
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+      background-size: 56px 56px;
+    }
+
+    .reticle-corner {
+      position: relative;
+    }
+    .reticle-corner::before,
+    .reticle-corner::after {
+      content: '';
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      pointer-events: none;
+      border-color: rgba(0, 229, 255, 0.4);
+    }
+    .reticle-corner::before {
+      top: 0; left: 0;
+      border-top: 1.5px solid;
+      border-left: 1.5px solid;
+    }
+    .reticle-corner::after {
+      bottom: 0; right: 0;
+      border-bottom: 1.5px solid;
+      border-right: 1.5px solid;
+    }
+
+    .modal-backdrop {
+      background: rgba(2, 4, 8, 0.95);
+      backdrop-filter: blur(32px);
+    }
+
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: #020408; }
+    ::-webkit-scrollbar-thumb { background: #1B253B; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #00E5FF; }
+  </style>
+</head>
+
+<body class="selection:bg-brand-cyan selection:text-black">
+
+  <div class="fixed inset-0 grid-pattern pointer-events-none z-0"></div>
+
+  <!-- ================================================================
+       NAVIGATION
+       ================================================================ -->
+  <header class="fixed top-0 left-0 right-0 z-50 glass-nav">
+    <div class="max-w-7xl mx-auto px-6 sm:px-8 h-20 flex items-center justify-between">
+      
+      <a href="#" class="flex items-center space-x-3 group">
+        <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-brand-cyan via-blue-600 to-brand-slateElevated flex items-center justify-center shadow-lg shadow-brand-cyan/20 ring-1 ring-white/20">
+          <i data-lucide="radio" class="w-4 h-4 text-brand-void"></i>
+        </div>
+        <div class="flex flex-col">
+          <span class="font-display font-medium text-2xl tracking-tight text-white leading-none">
+            ATSMUS<span class="text-brand-cyan">.</span>
+          </span>
+          <span class="text-[9px] font-mono tracking-widest text-slate-400 uppercase mt-0.5">Defense Ecosystem</span>
+        </div>
+      </a>
+
+      <nav class="hidden lg:flex items-center space-x-8 text-xs font-mono uppercase tracking-widest text-slate-300">
+        <a href="#ecosystem" class="hover:text-brand-cyan transition-colors">Ecosystem</a>
+        <a href="#atsmus-air" class="hover:text-brand-cyan transition-colors flex items-center group">
+          <span>ATSMUS AIR™</span>
+          <span class="w-1.5 h-1.5 rounded-full bg-brand-cyan ml-2 opacity-70 group-hover:opacity-100 animate-pulse"></span>
+        </a>
+        <a href="#atsmus-pddr" class="hover:text-brand-amber transition-colors flex items-center group">
+          <span>ATSMUS PDDR™</span>
+          <span class="w-1.5 h-1.5 rounded-full bg-brand-amber ml-2 opacity-70 group-hover:opacity-100 animate-pulse"></span>
+        </a>
+        <a href="#core-engine" class="hover:text-white transition-colors">AIRT™ Core</a>
+        <a href="#validation" class="hover:text-white transition-colors">Flight Logs</a>
+      </nav>
+
+      <div class="flex items-center space-x-4">
+        <a href="#contact" class="px-6 py-2.5 rounded-full bg-white text-black font-semibold text-xs font-mono uppercase tracking-wider hover:bg-brand-cyan hover:text-black hover:shadow-lg hover:shadow-brand-cyan/25 transition-all duration-300">
+          Request TDP
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================================================================
+       1. HERO: CATEGORY-DEFINING CELLULAR DEFENSE LEADERSHIP
+       ================================================================ -->
+  <section class="relative min-h-[96vh] flex items-center pt-32 pb-20 overflow-hidden hero-glow-radial z-10">
+    
+    <!-- 3D HIGH-FIDELITY KINETIC TACTICAL SIGNAL FIELD & STEALTH DRONE -->
+    <div id="threeHeroCanvas" class="absolute inset-0 z-0 pointer-events-none"></div>
+
+    <!-- Soft Ambient Left Fade Scrim for Pristine Text Readability -->
+    <div class="absolute inset-y-0 left-0 w-full lg:w-[65%] bg-gradient-to-r from-brand-void via-brand-void/85 to-transparent pointer-events-none z-10"></div>
+
+    <div class="max-w-7xl mx-auto px-6 sm:px-8 w-full relative z-20">
+      
+      <div class="w-full lg:w-[60%] flex flex-col items-start text-left pt-2 pb-6 relative z-20">
+        
+        <!-- Eyebrow Category Badge -->
+        <div class="inline-flex items-center space-x-2.5 px-4 py-1.5 rounded-full bg-white/[0.04] border border-white/10 text-[11px] font-mono tracking-widestPlus text-slate-300 mb-6 backdrop-blur-md">
+          <span class="w-2 h-2 rounded-full bg-brand-cyan animate-ping"></span>
+          <span class="text-slate-200 uppercase">CELLULAR DEFENSE ECOSYSTEM</span>
+        </div>
+
+        <!-- Leading Main Headline -->
+        <h1 class="font-display font-light text-3xl sm:text-5xl lg:text-[48px] xl:text-[54px] tracking-tight text-white whitespace-nowrap leading-none mb-3 drop-shadow-md">
+          Cellular-Driven Defense.
+        </h1>
+
+        <!-- STABLE 2-LINE RESERVED CONTAINER (ELIMINATES ALL LAYOUT JUMPING) -->
+        <div class="h-[75px] sm:h-[110px] lg:h-[125px] w-full flex items-start overflow-hidden mb-3">
+          <h2 id="rotatingHeadline" class="font-display font-semibold text-3xl sm:text-5xl lg:text-[52px] xl:text-[58px] tracking-tight text-brand-cyan transition-all duration-400 transform translate-y-0 opacity-100 leading-[1.1] drop-shadow-lg">
+            Total Airspace Dominance.
+          </h2>
+        </div>
+
+        <!-- Crisp Sub-Headline -->
+        <p class="text-base sm:text-lg text-slate-300 font-light max-w-xl leading-relaxed mb-8 tracking-tight drop-shadow-sm">
+          Turning global cellular signals into un-jammable drone navigation and zero-emission air defense radar.
+        </p>
+
+        <!-- SINGLE HIGH-IMPACT PROCUREMENT CTA -->
+        <div class="w-full sm:w-auto mb-8">
+          <a href="#contact" class="inline-block w-full sm:w-auto px-9 py-4 rounded-full bg-brand-cyan text-black font-semibold text-xs font-mono uppercase tracking-widest hover:bg-white hover:shadow-2xl hover:shadow-brand-cyan/30 hover:scale-[1.02] transition-all text-center">
+            Request Technical Data Package (TDP) →
+          </a>
+        </div>
+
+        <!-- Dual Persona Fast-Links -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6 border-t border-white/10 w-full max-w-xl">
+          <a href="#atsmus-air" class="flex items-center space-x-3 p-3 rounded-xl bg-white/[0.02] border border-white/[0.06] hover:border-brand-cyan/40 transition-colors group">
+            <i data-lucide="navigation" class="w-4 h-4 text-brand-cyan shrink-0"></i>
+            <div class="text-left">
+              <div class="text-[10px] font-mono text-brand-cyan uppercase tracking-wider">For UAV Autonomy Primes</div>
+              <div class="text-xs text-slate-300 font-sans group-hover:text-white">GPS-Denied Assured PNT →</div>
+            </div>
+          </a>
+          <a href="#atsmus-pddr" class="flex items-center space-x-3 p-3 rounded-xl bg-white/[0.02] border border-white/[0.06] hover:border-brand-amber/40 transition-colors group">
+            <i data-lucide="shield" class="w-4 h-4 text-brand-amber shrink-0"></i>
+            <div class="text-left">
+              <div class="text-[10px] font-mono text-brand-amber uppercase tracking-wider">For Air Defense &amp; C-UAS</div>
+              <div class="text-xs text-slate-300 font-sans group-hover:text-white">Covert Passive Radar →</div>
+            </div>
+          </a>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================================================================
+       2. MISSION METRICS STRIP
+       ================================================================ -->
+  <section class="py-8 relative z-20 border-y border-white/[0.07] bg-brand-slateElevated/50 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-6 sm:px-8">
+      
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+        
+        <div class="p-4 border-r border-white/[0.06] last:border-none reticle-corner">
+          <div class="text-3xl sm:text-4xl font-display font-light text-white tracking-tight">0.00 W</div>
+          <div class="text-xs font-mono text-brand-cyan mt-1.5 font-medium uppercase tracking-wider">Full EMCON Stealth</div>
+          <div class="text-[12px] text-slate-400 mt-1 font-light">100% receive-only mode</div>
+        </div>
+
+        <div class="p-4 border-r border-white/[0.06] last:border-none reticle-corner">
+          <div class="text-3xl sm:text-4xl font-display font-light text-white tracking-tight">&lt; 8.9 m</div>
+          <div class="text-xs font-mono text-brand-emerald mt-1.5 font-medium uppercase tracking-wider">Measured Accuracy</div>
+          <div class="text-[12px] text-slate-400 mt-1 font-light">Flight-verified CE90 fix</div>
+        </div>
+
+        <div class="p-4 border-r border-white/[0.06] last:border-none reticle-corner">
+          <div class="text-3xl sm:text-4xl font-display font-light text-white tracking-tight">400 km</div>
+          <div class="text-xs font-mono text-brand-amber mt-1.5 font-medium uppercase tracking-wider">Alpine Flight Range</div>
+          <div class="text-[12px] text-slate-400 mt-1 font-light">4,000m operational altitude</div>
+        </div>
+
+        <div class="p-4 reticle-corner">
+          <div class="text-3xl sm:text-4xl font-display font-light text-white tracking-tight">Zero Permits</div>
+          <div class="text-xs font-mono text-slate-300 mt-1.5 font-medium uppercase tracking-wider">Spectrum Free</div>
+          <div class="text-[12px] text-slate-400 mt-1 font-light">Uses ambient LTE/5G RF</div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================================================================
+       3. THE DUAL PILLARS: ECOSYSTEM ARCHITECTURE
+       ================================================================ -->
+  <section id="ecosystem" class="py-24 relative z-10 border-b border-white/[0.06]">
+    <div class="max-w-7xl mx-auto px-6 sm:px-8">
+      
+      <div class="text-center max-w-2xl mx-auto mb-16">
+        <div class="text-xs font-mono text-brand-cyan uppercase tracking-widest mb-3">Unified Tactical Architecture</div>
+        <h2 class="font-display font-light text-4xl sm:text-5xl text-white tracking-tight mb-3">
+          Two Capabilities. One Core.
+        </h2>
+        <p class="text-slate-400 text-sm font-light leading-relaxed">
+          High-precision, un-jammable defense capabilities across offensive mission assurance and defensive airspace protection.
+        </p>
+      </div>
+
+      <!-- THE TWO PILLARS CARDS -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        
+        <!-- PILLAR 1: ATSMUS AIR™ -->
+        <div id="atsmus-air" class="glass-card glass-card-cyan p-8 sm:p-10 rounded-3xl flex flex-col justify-between relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-64 h-64 bg-brand-cyan/10 rounded-full blur-[90px] pointer-events-none"></div>
+
+          <div>
+            <div class="flex items-center justify-between pb-5 border-b border-white/10 mb-6">
+              <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-brand-cyan/10 border border-brand-cyan/30 text-brand-cyan font-mono text-xs font-semibold uppercase tracking-wider">
+                <i data-lucide="navigation" class="w-3.5 h-3.5"></i>
+                <span>Pillar 1: Mission Assurance</span>
+              </div>
+              <span class="text-xs font-mono text-slate-400">AVIONICS PAYLOAD</span>
+            </div>
+
+            <h3 class="font-display text-3xl sm:text-4xl text-white font-light mb-2">
+              ATSMUS AIR™
+            </h3>
+            <div class="text-brand-cyan font-mono text-xs uppercase tracking-wider mb-4">
+              Assured PNT for GPS-Denied Autonomous Strike &amp; Recon
+            </div>
+            <p class="text-slate-300 text-sm leading-relaxed mb-6 font-light">
+              A Low-SWaP airborne SDR receiver that provides continuous flight positioning using ambient cellular signals when GNSS is jammed, spoofed, or denied.
+            </p>
+
+            <div class="space-y-2.5 font-mono text-xs text-slate-300 mb-6">
+              <div class="flex items-start">
+                <span class="w-4 h-4 rounded bg-brand-cyan/20 text-brand-cyan flex items-center justify-center mr-3 mt-0.5 shrink-0 font-bold">✓</span>
+                <span class="text-slate-200">Fuses RF Fingerprinting with TDOA for sub-9m CE90 positioning.</span>
+              </div>
+              <div class="flex items-start">
+                <span class="w-4 h-4 rounded bg-brand-cyan/20 text-brand-cyan flex items-center justify-center mr-3 mt-0.5 shrink-0 font-bold">✓</span>
+                <span class="text-slate-200">Cross-Border operation over uncooperative foreign networks.</span>
+              </div>
+              <div class="flex items-start">
+                <span class="w-4 h-4 rounded bg-brand-cyan/20 text-brand-cyan flex items-center justify-center mr-3 mt-0.5 shrink-0 font-bold">✓</span>
+                <span class="text-slate-200">Immune to smoke, fog, darkness, and visual degradation.</span>
+              </div>
+            </div>
+
+            <!-- Mini Telemetry Canvas -->
+            <div class="w-full aspect-[16/6] rounded-xl bg-brand-void border border-white/10 relative overflow-hidden mb-6">
+              <canvas id="airNavCanvas" class="w-full h-full"></canvas>
+              <div class="absolute bottom-2 left-2 bg-brand-surface/90 px-2.5 py-1 rounded text-[10px] font-mono text-brand-cyan border border-white/10">
+                LIVE FIX: CE90 &lt; 8.9m
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-white/10 flex items-center justify-between">
+            <button onclick="openDeepDive('air')" class="px-6 py-3 rounded-full bg-brand-cyan text-black font-mono text-xs font-semibold uppercase tracking-wider hover:bg-white hover:shadow-lg hover:shadow-brand-cyan/25 transition-all inline-flex items-center space-x-2">
+              <span>View AIR™ Architecture</span>
+              <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </button>
+            <span class="text-xs font-mono text-slate-400">TRL-6 Ready</span>
+          </div>
+        </div>
+
+        <!-- PILLAR 2: ATSMUS PDDR™ -->
+        <div id="atsmus-pddr" class="glass-card glass-card-amber p-8 sm:p-10 rounded-3xl flex flex-col justify-between relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-64 h-64 bg-brand-amber/10 rounded-full blur-[90px] pointer-events-none"></div>
+
+          <div>
+            <div class="flex items-center justify-between pb-5 border-b border-white/10 mb-6">
+              <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-brand-amber/10 border border-brand-amber/30 text-brand-amber font-mono text-xs font-semibold uppercase tracking-wider">
+                <i data-lucide="shield" class="w-3.5 h-3.5"></i>
+                <span>Pillar 2: Air Defense</span>
+              </div>
+              <span class="text-xs font-mono text-slate-400">SURVEILLANCE RADAR</span>
+            </div>
+
+            <h3 class="font-display text-3xl sm:text-4xl text-white font-light mb-2">
+              ATSMUS PDDR™
+            </h3>
+            <div class="text-brand-amber font-mono text-xs uppercase tracking-wider mb-4">
+              Passive Bistatic Radar for Covert C-UAS Threat Detection
+            </div>
+            <p class="text-slate-300 text-sm leading-relaxed mb-6 font-light">
+              A zero-emission radar system that detects, tracks, and classifies incoming rogue drones by reading ambient cellular radio reflections.
+            </p>
+
+            <div class="space-y-2.5 font-mono text-xs text-slate-300 mb-6">
+              <div class="flex items-start">
+                <span class="w-4 h-4 rounded bg-brand-amber/20 text-brand-amber flex items-center justify-center mr-3 mt-0.5 shrink-0 font-bold">✓</span>
+                <span class="text-slate-200">100% Invisible to Anti-Radiation Missiles and SIGINT receivers.</span>
+              </div>
+              <div class="flex items-start">
+                <span class="w-4 h-4 rounded bg-brand-amber/20 text-brand-amber flex items-center justify-center mr-3 mt-0.5 shrink-0 font-bold">✓</span>
+                <span class="text-slate-200">Micro-Doppler spectral analysis classifies propeller kinematics vs. birds.</span>
+              </div>
+              <div class="flex items-start">
+                <span class="w-4 h-4 rounded bg-brand-amber/20 text-brand-amber flex items-center justify-center mr-3 mt-0.5 shrink-0 font-bold">✓</span>
+                <span class="text-slate-200">Zero spectrum licenses required—ideal for borders and airports.</span>
+              </div>
+            </div>
+
+            <!-- Mini Radar Canvas -->
+            <div class="w-full aspect-[16/6] rounded-xl bg-brand-void border border-white/10 relative overflow-hidden mb-6 flex items-center justify-center">
+              <canvas id="pddrRadarCanvas" width="440" height="170" class="w-full h-full"></canvas>
+              <div class="absolute bottom-2 right-2 bg-brand-surface/90 px-2.5 py-1 rounded text-[10px] font-mono text-brand-amber border border-white/10">
+                PASSIVE SCAN: 0.00W
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-white/10 flex items-center justify-between">
+            <button onclick="openDeepDive('pddr')" class="px-6 py-3 rounded-full bg-brand-amber text-black font-mono text-xs font-semibold uppercase tracking-wider hover:bg-white hover:shadow-lg hover:shadow-brand-amber/25 transition-all inline-flex items-center space-x-2">
+              <span>View PDDR™ Architecture</span>
+              <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </button>
+            <span class="text-xs font-mono text-slate-400">Demonstrator Stage</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================================================================
+       4. THE PROPRIETARY CORE ENGINE: AIRT™ & SLAM MOAT
+       ================================================================ -->
+  <section id="core-engine" class="py-24 relative z-10 border-b border-white/[0.06] bg-brand-slateElevated/30">
+    <div class="max-w-7xl mx-auto px-6 sm:px-8">
+      
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center mb-14">
+        <div class="lg:col-span-6 space-y-3 text-left">
+          <div class="text-xs font-mono text-brand-cyan uppercase tracking-widest">Algorithmic IP &amp; Defense Moat</div>
+          <h2 class="font-display font-light text-4xl sm:text-5xl text-white tracking-tight leading-tight">
+            Powered by the ATSMUS <br />
+            <span class="text-brand-cyan font-normal">AIRT™ Deep-Tech Engine</span>
+          </h2>
+          <p class="text-slate-300 text-sm leading-relaxed font-light">
+            Proprietary AI ray-tracing physics and simultaneous localization algorithms turning ambient commercial RF spectrum into battlefield precision.
+          </p>
+        </div>
+        <div class="lg:col-span-6">
+          <div class="p-5 rounded-2xl bg-brand-void border border-white/10 font-mono text-xs text-slate-300 space-y-2.5">
+            <div class="flex items-center justify-between text-slate-400 pb-2 border-b border-white/10">
+              <span class="text-brand-cyan font-bold">PROPAGATION SOLVER</span>
+              <span>CARDINAL RAY OPTIMIZATION</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span>Raw Environmental Rays:</span>
+              <span class="text-red-400 font-bold">~30,000 Rays (Unsolvable in real-time)</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span>AIRT™ AI Reduction:</span>
+              <span class="text-brand-emerald font-bold">~25 Cardinal Rays (Real-time Airborne Fix)</span>
+            </div>
+            <div class="text-[11px] text-slate-400 pt-1 font-sans">
+              *Calculated over combination of DTM and vectorized 3D polygon building contours.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        <div class="glass-card p-7 rounded-3xl">
+          <div class="w-10 h-10 rounded-xl bg-brand-cyan/10 border border-brand-cyan/30 flex items-center justify-center text-brand-cyan mb-5">
+            <i data-lucide="cpu" class="w-4 h-4"></i>
+          </div>
+          <h3 class="font-display font-medium text-lg text-white mb-2">1. AIRT™ AI Ray Tracing</h3>
+          <p class="text-slate-400 text-xs leading-relaxed font-light mb-3">
+            Selects 3D cardinal rays conveying the bulk of RF energy, enabling 4D coverage modeling across 0–500m+ altitudes.
+          </p>
+          <div class="text-[10px] font-mono text-brand-cyan">4D Coverage (X, Y, Z, Cell)</div>
+        </div>
+
+        <div class="glass-card p-7 rounded-3xl">
+          <div class="w-10 h-10 rounded-xl bg-brand-amber/10 border border-brand-amber/30 flex items-center justify-center text-brand-amber mb-5">
+            <i data-lucide="map" class="w-4 h-4"></i>
+          </div>
+          <h3 class="font-display font-medium text-lg text-white mb-2">2. MAP-SLAM-TDOA</h3>
+          <p class="text-slate-400 text-xs leading-relaxed font-light mb-3">
+            Simultaneously locates the drone and unknown cell towers across non-cooperative foreign borders using MAP estimation.
+          </p>
+          <div class="text-[10px] font-mono text-brand-amber">Cross-Border Uncooperative SLAM</div>
+        </div>
+
+        <div class="glass-card p-7 rounded-3xl">
+          <div class="w-10 h-10 rounded-xl bg-brand-emerald/10 border border-brand-emerald/30 flex items-center justify-center text-brand-emerald mb-5">
+            <i data-lucide="activity" class="w-4 h-4"></i>
+          </div>
+          <h3 class="font-display font-medium text-lg text-white mb-2">3. Assisted-TDOA Fusion</h3>
+          <p class="text-slate-400 text-xs leading-relaxed font-light mb-3">
+            Fuses RF Fingerprinting with Time Difference of Arrival via µKalman 4D matrix filters to maintain lock with sparse tower visibility.
+          </p>
+          <div class="text-[10px] font-mono text-brand-emerald">Hybrid Timing &amp; Pattern Fusion</div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================================================================
+       5. REAL-WORLD FLIGHT VALIDATION
+       ================================================================ -->
+  <section id="validation" class="py-24 relative z-10 border-b border-white/[0.05]">
+    <div class="max-w-7xl mx-auto px-6 sm:px-8">
+      
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-14">
+        <div>
+          <div class="text-xs font-mono text-brand-emerald uppercase tracking-widest mb-2">Empirical Flight Proof</div>
+          <h2 class="font-display font-light text-4xl sm:text-5xl text-white tracking-tight mb-2">
+            Tested &amp; Proven in Live Airspace.
+          </h2>
+          <p class="text-slate-400 text-sm font-light">
+            Real-world Canadian flight trials verified with Tier-1 defense and aerospace partners.
+          </p>
+        </div>
+        <button onclick="openDeepDive('flightReport')" class="mt-4 md:mt-0 px-6 py-2.5 rounded-full bg-white/[0.04] border border-white/15 text-white font-mono text-xs uppercase tracking-wider hover:bg-brand-cyan hover:text-black hover:border-brand-cyan transition-all inline-flex items-center space-x-2">
+          <span>View Telemetry Log</span>
+          <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+        <div class="glass-card p-6 rounded-2xl">
+          <div class="text-3xl sm:text-4xl font-display font-light text-white mb-2">8.9 m</div>
+          <div class="text-xs font-mono text-brand-emerald uppercase tracking-wider mb-1.5 font-semibold">Measured Accuracy</div>
+          <p class="text-slate-400 text-xs leading-relaxed font-light">
+            Live one-hour helicopter flight at 400–600m altitude over Collingwood, Ontario.
+          </p>
+        </div>
+        <div class="glass-card p-6 rounded-2xl">
+          <div class="text-3xl sm:text-4xl font-display font-light text-white mb-2">400 km</div>
+          <div class="text-xs font-mono text-brand-cyan uppercase tracking-wider mb-1.5 font-semibold">Alpine Distance</div>
+          <p class="text-slate-400 text-xs leading-relaxed font-light">
+            Continuous flight tracking across mountainous terrain in British Columbia.
+          </p>
+        </div>
+        <div class="glass-card p-6 rounded-2xl">
+          <div class="text-3xl sm:text-4xl font-display font-light text-white mb-2">4,000 m</div>
+          <div class="text-xs font-mono text-brand-amber uppercase tracking-wider mb-1.5 font-semibold">Max Altitude Fix</div>
+          <p class="text-slate-400 text-xs leading-relaxed font-light">
+            Verified reception and lock on cellular synchronization pulses at high altitude.
+          </p>
+        </div>
+        <div class="glass-card p-6 rounded-2xl">
+          <div class="text-3xl sm:text-4xl font-display font-light text-white mb-2">Tier-1</div>
+          <div class="text-xs font-mono text-slate-300 uppercase tracking-wider mb-1.5 font-semibold">Customer Pilots</div>
+          <p class="text-slate-400 text-xs leading-relaxed font-light">
+            Completed paid pilot programs with defense and aerospace primes.
+          </p>
+        </div>
+      </div>
+
+      <div class="p-8 rounded-3xl glass-card grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <div class="lg:col-span-6 space-y-3">
+          <div class="text-xs font-mono text-brand-cyan uppercase tracking-widest">Collingwood Flight Trial Telemetry</div>
+          <h3 class="font-display font-light text-2xl sm:text-3xl text-white">Live Airborne Flight Path Comparison</h3>
+          <p class="text-slate-300 text-xs leading-relaxed font-light">
+            During helicopter maneuvers, the ATSMUS Air evaluation receiver decoded cellular PSS/SSS synchronization pulses in real time, calculating true positions strictly from terrestrial cell signals with zero GPS connection.
+          </p>
+          <div class="flex items-center space-x-5 text-xs font-mono pt-2">
+            <div class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-black border border-white/50 mr-2"></span><span class="text-slate-300">ATSMUS Fix</span></div>
+            <div class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-red-500 mr-2"></span><span class="text-slate-300">Helicopter Route</span></div>
+            <div class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-brand-cyan mr-2"></span><span class="text-slate-300">TDOA Hyperbolas</span></div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-6 aspect-[16/8] rounded-2xl overflow-hidden relative border border-white/[0.08] bg-brand-void flex items-center justify-center">
+          <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1000&q=80" alt="Mountain flight path" class="w-full h-full object-cover opacity-35" />
+          <div class="absolute inset-0 bg-brand-void/70 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center">
+            <i data-lucide="check-circle-2" class="w-8 h-8 text-brand-emerald mb-2"></i>
+            <div class="font-display font-medium text-white text-lg">TRL-5 Validated • TRL-6 Airborne Active</div>
+            <div class="text-xs font-mono text-brand-cyan mt-1">Ontario &amp; British Columbia Flight Data Logged</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================================================================
+       6. OPERATIONAL MARKETS
+       ================================================================ -->
+  <section id="markets" class="py-24 relative z-10 border-b border-white/[0.05] bg-brand-slateElevated/20">
+    <div class="max-w-7xl mx-auto px-6 sm:px-8">
+      
+      <div class="text-center max-w-2xl mx-auto mb-14">
+        <div class="text-xs font-mono text-brand-cyan uppercase tracking-widest mb-3">Operational Deployment</div>
+        <h2 class="font-display font-light text-4xl sm:text-5xl text-white tracking-tight">
+          Where ATSMUS Operates.
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        <div class="p-7 rounded-3xl border border-white/[0.06] bg-white/[0.01] hover:border-brand-cyan/40 transition-colors">
+          <div class="w-10 h-10 rounded-xl bg-brand-cyan/10 text-brand-cyan flex items-center justify-center mb-5">
+            <i data-lucide="crosshair" class="w-4 h-4"></i>
+          </div>
+          <div class="text-brand-cyan font-mono text-[11px] uppercase tracking-wider mb-2">Tactical Operations</div>
+          <h3 class="font-display font-normal text-xl text-white mb-2">Defense Primes &amp; Tactical UAVs</h3>
+          <p class="text-slate-400 text-xs leading-relaxed font-light">
+            Mission-critical navigation for autonomous strike and ISR swarms in heavily contested electronic warfare theaters.
+          </p>
+        </div>
+
+        <div class="p-7 rounded-3xl border border-white/[0.06] bg-white/[0.01] hover:border-brand-amber/40 transition-colors">
+          <div class="w-10 h-10 rounded-xl bg-brand-amber/10 text-brand-amber flex items-center justify-center mb-5">
+            <i data-lucide="shield" class="w-4 h-4"></i>
+          </div>
+          <div class="text-brand-amber font-mono text-[11px] uppercase tracking-wider mb-2">Homeland Security</div>
+          <h3 class="font-display font-normal text-xl text-white mb-2">Borders &amp; Forward Bases</h3>
+          <p class="text-slate-400 text-xs leading-relaxed font-light">
+            Covert detection of low-RCS smuggling and reconnaissance drones without giving away defensive radar coordinates.
+          </p>
+        </div>
+
+        <div class="p-7 rounded-3xl border border-white/[0.06] bg-white/[0.01] hover:border-brand-emerald/40 transition-colors">
+          <div class="w-10 h-10 rounded-xl bg-brand-emerald/10 text-brand-emerald flex items-center justify-center mb-5">
+            <i data-lucide="plane" class="w-4 h-4"></i>
+          </div>
+          <div class="text-brand-emerald font-mono text-[11px] uppercase tracking-wider mb-2">Aviation &amp; Critical Sites</div>
+          <h3 class="font-display font-normal text-xl text-white mb-2">Airports &amp; Critical Infrastructure</h3>
+          <p class="text-slate-400 text-xs leading-relaxed font-light">
+            Continuous C-UAS perimeter security with zero RF spectrum interference and no regulatory licenses required.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================================================================
+       7. STRATEGIC BRIEFING & TDP PROCUREMENT FORM
+       ================================================================ -->
+  <section id="contact" class="py-24 relative z-10 bg-gradient-to-b from-brand-slateElevated to-brand-void">
+    <div class="max-w-4xl mx-auto px-6 sm:px-8 text-center">
+      
+      <div class="text-xs font-mono text-brand-cyan uppercase tracking-widest mb-3">Defense Procurement &amp; OEM Inquiries</div>
+      <h2 class="font-display font-light text-4xl sm:text-5xl text-white tracking-tight mb-3">
+        Request Technical Data Package (TDP).
+      </h2>
+      <p class="text-slate-300 text-sm max-w-lg mx-auto mb-10 font-light">
+        Connect with our defense engineering team for hardware integration specifications (SWaP-C), API docs, and live flight demonstrations.
+      </p>
+
+      <form onsubmit="event.preventDefault(); alert('Technical Data Package request received. An ATSMUS defense representative will contact you via secure protocol.');" class="glass-card p-8 sm:p-10 rounded-3xl text-left space-y-5">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div>
+            <label class="block text-xs font-mono text-slate-400 mb-2 uppercase">Principal Name</label>
+            <input type="text" required placeholder="Name & Title" class="w-full px-4 py-3 rounded-xl bg-brand-void border border-white/10 text-white text-sm focus:border-brand-cyan focus:outline-none transition-colors" />
+          </div>
+          <div>
+            <label class="block text-xs font-mono text-slate-400 mb-2 uppercase">Organization / Defense Prime</label>
+            <input type="text" required placeholder="Organization / Agency" class="w-full px-4 py-3 rounded-xl bg-brand-void border border-white/10 text-white text-sm focus:border-brand-cyan focus:outline-none transition-colors" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div>
+            <label class="block text-xs font-mono text-slate-400 mb-2 uppercase">Official / Classified Email</label>
+            <input type="email" required placeholder="name@agency.com" class="w-full px-4 py-3 rounded-xl bg-brand-void border border-white/10 text-white text-sm focus:border-brand-cyan focus:outline-none transition-colors" />
+          </div>
+          <div>
+            <label class="block text-xs font-mono text-slate-400 mb-2 uppercase">Area of Evaluation</label>
+            <select class="w-full px-4 py-3 rounded-xl bg-brand-void border border-white/10 text-white text-sm focus:border-brand-cyan focus:outline-none transition-colors">
+              <option>ATSMUS AIR™ (GPS-Denied UAV Navigation Payload)</option>
+              <option>ATSMUS PDDR™ (Passive Bistatic C-UAS Radar)</option>
+              <option>AIRT™ Engine License / Autopilot API Integration</option>
+              <option>Comprehensive Cellular Defense Ecosystem</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-mono text-slate-400 mb-2 uppercase">Mission / Platform Requirements</label>
+          <textarea rows="3" placeholder="Specify platform class, autopilot bus (MAVLink/ROS2), SWaP constraints, or scheduled trial timeline..." class="w-full px-4 py-3 rounded-xl bg-brand-void border border-white/10 text-white text-sm focus:border-brand-cyan focus:outline-none transition-colors"></textarea>
+        </div>
+
+        <button type="submit" class="w-full py-4 rounded-full bg-white text-black font-semibold text-xs font-mono uppercase tracking-widest hover:bg-brand-cyan hover:text-black transition-all">
+          Submit Technical Briefing Request →
+        </button>
+      </form>
+
+    </div>
+  </section>
+
+  <!-- ================================================================
+       8. FOOTER
+       ================================================================ -->
+  <footer class="border-t border-white/[0.05] bg-brand-void py-10 relative z-10 text-xs font-mono text-slate-500">
+    <div class="max-w-7xl mx-auto px-6 sm:px-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+      <div class="flex items-center space-x-3">
+        <span class="font-display font-medium text-white text-base">ATSMUS<span class="text-brand-cyan">.</span></span>
+        <span>Cellular Defense Ecosystem</span>
+      </div>
+      
+      <div class="flex items-center space-x-6 text-slate-400">
+        <a href="#atsmus-air" class="hover:text-white transition-colors">ATSMUS AIR™</a>
+        <a href="#atsmus-pddr" class="hover:text-white transition-colors">ATSMUS PDDR™</a>
+        <a href="#core-engine" class="hover:text-white transition-colors">AIRT™ Core</a>
+        <a href="#validation" class="hover:text-white transition-colors">Flight Logs</a>
+        <a href="#contact" class="hover:text-white transition-colors">Contact</a>
+      </div>
+
+      <div class="flex items-center space-x-6 text-slate-400">
+        <a href="mailto:info@atsmus.com" class="hover:text-white transition-colors">info@atsmus.com</a>
+        <span>© 2026 ATSMUS. All rights reserved.</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ================================================================
+       TECHNICAL DEEP-DIVE MODAL SYSTEM
+       ================================================================ -->
+  <div id="deepDiveModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 sm:p-6 modal-backdrop">
+    <div id="modalCard" class="glass-card w-full max-w-4xl max-h-[92vh] overflow-y-auto rounded-3xl p-8 sm:p-10 relative border border-white/20">
+      
+      <button onclick="closeDeepDive()" class="absolute top-6 right-6 w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10 transition-colors">
+        <i data-lucide="x" class="w-4 h-4"></i>
+      </button>
+
+      <div id="deepDiveContent"></div>
+
+    </div>
+  </div>
+
+  <!-- ================================================================
+       JAVASCRIPT: THREE.JS 3D SURROUND RIG & SCRIPT CONTROLLER
+       ================================================================ -->
+  <script>
+    lucide.createIcons();
+
+    // -------------------------------------------------------------
+    // 1. HERO ROTATING STRATEGIC HEADLINES
+    // -------------------------------------------------------------
+    const rotatingStates = [
+      { text: "Total Airspace Dominance.", color: "#00E5FF" },
+      { text: "GPS-Denied Strike Autonomy.", color: "#10B981" },
+      { text: "Zero-Emission Air Defense.", color: "#FF9900" }
+    ];
+
+    let currentRotation = 0;
+    const headlineEl = document.getElementById('rotatingHeadline');
+
+    setInterval(() => {
+      currentRotation = (currentRotation + 1) % rotatingStates.length;
+      headlineEl.style.opacity = '0';
+      headlineEl.style.transform = 'translateY(12px)';
+
+      setTimeout(() => {
+        headlineEl.innerText = rotatingStates[currentRotation].text;
+        headlineEl.style.color = rotatingStates[currentRotation].color;
+        headlineEl.style.opacity = '1';
+        headlineEl.style.transform = 'translateY(0)';
+      }, 200);
+    }, 3600);
+
+    // -------------------------------------------------------------
+    // 2. REALISTIC 3D DEFENSE DRONE & CELL MAST VISUALIZATION
+    // -------------------------------------------------------------
+    (function initSurroundTactical3D() {
+      const container = document.getElementById('threeHeroCanvas');
+      if (!container) return;
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(42, window.innerWidth / window.innerHeight, 1, 1000);
+      camera.position.set(0, 14, 60);
+      camera.lookAt(0, 2, 0);
+
+      const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: "high-performance" });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.35;
+      container.appendChild(renderer.domElement);
+
+      const ambientLight = new THREE.AmbientLight(0x131f33, 2.2);
+      scene.add(ambientLight);
+
+      const cyanKeyLight = new THREE.DirectionalLight(0x00E5FF, 3.4);
+      cyanKeyLight.position.set(-20, 35, 30);
+      scene.add(cyanKeyLight);
+
+      const rimLight = new THREE.DirectionalLight(0x38bdf8, 4.2);
+      rimLight.position.set(45, 25, -15);
+      scene.add(rimLight);
+
+      const amberAccentLight = new THREE.PointLight(0xff6600, 2.4, 70);
+      amberAccentLight.position.set(12, -6, 22);
+      scene.add(amberAccentLight);
+
+      // KINETIC SIGNAL WAVE PARTICLES
+      const countX = 52;
+      const countZ = 52;
+      const totalParticles = countX * countZ;
+      const particlePositions = new Float32Array(totalParticles * 3);
+      const particleColors = new Float32Array(totalParticles * 3);
+
+      let pIdx = 0;
+      for (let ix = 0; ix < countX; ix++) {
+        for (let iz = 0; iz < countZ; iz++) {
+          const x = (ix - countX / 2) * 3.6;
+          const z = (iz - countZ / 2) * 3.6;
+          particlePositions[pIdx * 3] = x;
+          particlePositions[pIdx * 3 + 1] = -7.5;
+          particlePositions[pIdx * 3 + 2] = z;
+
+          const dist = Math.sqrt(x * x + z * z);
+          const leftFade = x < 0 ? Math.max(0.1, 1.0 + (x / 25)) : 1.0;
+
+          if (dist < 28) {
+            particleColors[pIdx * 3] = 0.0 * leftFade;
+            particleColors[pIdx * 3 + 1] = 0.88 * leftFade;
+            particleColors[pIdx * 3 + 2] = 1.0 * leftFade;
+          } else if (dist < 46) {
+            particleColors[pIdx * 3] = 0.15 * leftFade;
+            particleColors[pIdx * 3 + 1] = 0.32 * leftFade;
+            particleColors[pIdx * 3 + 2] = 0.58 * leftFade;
+          } else {
+            particleColors[pIdx * 3] = 0.06 * leftFade;
+            particleColors[pIdx * 3 + 1] = 0.12 * leftFade;
+            particleColors[pIdx * 3 + 2] = 0.25 * leftFade;
+          }
+          pIdx++;
+        }
+      }
+
+      const kineticGeo = new THREE.BufferGeometry();
+      kineticGeo.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+      kineticGeo.setAttribute('color', new THREE.BufferAttribute(particleColors, 3));
+
+      const kineticMat = new THREE.PointsMaterial({
+        size: 1.15,
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.4
+      });
+
+      const kineticParticles = new THREE.Points(kineticGeo, kineticMat);
+      scene.add(kineticParticles);
+
+      // CELL TOWER
+      const towerX = 22;
+      const towerZ = -4;
+      const towerGroup = new THREE.Group();
+      towerGroup.position.set(towerX, -7.5, towerZ);
+
+      const steelMat = new THREE.MeshStandardMaterial({ color: 0x475569, metalness: 0.9, roughness: 0.25 });
+      const darkSteelMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.95, roughness: 0.2 });
+      const radomeMat = new THREE.MeshStandardMaterial({ color: 0xf1f5f9, roughness: 0.4, metalness: 0.1 });
+      const cyanGlowMat = new THREE.MeshBasicMaterial({ color: 0x00E5FF });
+
+      const towerHeight = 24;
+      const baseR = 1.6;
+      const topR = 0.65;
+      const stages = 8;
+
+      const colGeo = new THREE.CylinderGeometry(0.075, 0.1, towerHeight, 12);
+      for (let i = 0; i < 3; i++) {
+        const ang = (i * Math.PI * 2) / 3;
+        const col = new THREE.Mesh(colGeo, steelMat);
+        const avgR = (baseR + topR) / 2;
+        col.position.set(Math.cos(ang) * avgR, towerHeight / 2, Math.sin(ang) * avgR);
+        col.rotation.z = Math.cos(ang) * 0.042;
+        col.rotation.x = -Math.sin(ang) * 0.042;
+        towerGroup.add(col);
+      }
+
+      for (let s = 1; s <= stages; s++) {
+        const y = (s / stages) * towerHeight;
+        const r = baseR - (baseR - topR) * (s / stages);
+        const ringPoints = [];
+        for (let i = 0; i <= 3; i++) {
+          const ang = (i * Math.PI * 2) / 3;
+          ringPoints.push(new THREE.Vector3(Math.cos(ang) * r, y, Math.sin(ang) * r));
+        }
+        const ringMesh = new THREE.Line(new THREE.BufferGeometry().setFromPoints(ringPoints), new THREE.LineBasicMaterial({ color: 0x64748b }));
+        towerGroup.add(ringMesh);
+      }
+
+      const headGroup = new THREE.Group();
+      headGroup.position.y = towerHeight;
+
+      const platformGeo = new THREE.CylinderGeometry(1.8, 1.5, 0.18, 6);
+      headGroup.add(new THREE.Mesh(platformGeo, darkSteelMat));
+
+      const radomeGeo = new THREE.BoxGeometry(0.35, 2.8, 0.2);
+      for (let i = 0; i < 3; i++) {
+        const ang = (i * Math.PI * 2) / 3;
+        const radome = new THREE.Mesh(radomeGeo, radomeMat);
+        radome.position.set(Math.cos(ang) * 1.45, 1.2, Math.sin(ang) * 1.45);
+        radome.rotation.y = -ang + Math.PI / 2;
+        headGroup.add(radome);
+      }
+
+      const beaconLight = new THREE.Mesh(new THREE.SphereGeometry(0.2, 16, 16), cyanGlowMat);
+      beaconLight.position.y = 2.8;
+      headGroup.add(beaconLight);
+
+      const beaconHalo = new THREE.PointLight(0x00E5FF, 3.2, 18);
+      beaconHalo.position.y = 2.8;
+      headGroup.add(beaconHalo);
+
+      towerGroup.add(headGroup);
+      scene.add(towerGroup);
+
+      // Concentric RF Cellular Waves
+      const waveCount = 5;
+      const waveRings = [];
+      for (let i = 0; i < waveCount; i++) {
+        const ringGeo = new THREE.TorusGeometry(1.2, 0.04, 16, 64);
+        const ringMat = new THREE.MeshBasicMaterial({ color: 0x00E5FF, transparent: true, opacity: 0.5 });
+        const ring = new THREE.Mesh(ringGeo, ringMat);
+        ring.rotation.x = Math.PI / 2;
+        ring.position.set(towerX, towerHeight - 7.5 + 1.2, towerZ);
+        scene.add(ring);
+        waveRings.push(ring);
+      }
+
+      // TACTICAL DRONE RIG
+      const droneRig = new THREE.Group();
+      const carbonBodyMat = new THREE.MeshStandardMaterial({ color: 0x0a101d, roughness: 0.3, metalness: 0.85 });
+      const carbonArmMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.9, roughness: 0.25 });
+      const motorBellMat = new THREE.MeshStandardMaterial({ color: 0x475569, metalness: 0.95, roughness: 0.15 });
+      const receiverCapMat = new THREE.MeshStandardMaterial({ color: 0x00E5FF, roughness: 0.2, metalness: 0.7 });
+      const bladeMat = new THREE.MeshStandardMaterial({ color: 0x030712, roughness: 0.2, metalness: 0.6 });
+
+      const mainChassis = new THREE.Mesh(new THREE.BoxGeometry(1.4, 0.38, 2.4), carbonBodyMat);
+      droneRig.add(mainChassis);
+
+      const noseCanopy = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.7, 0.38, 4), carbonBodyMat);
+      noseCanopy.position.set(0, 0.02, -1.35);
+      noseCanopy.rotation.y = Math.PI / 4;
+      droneRig.add(noseCanopy);
+
+      const atsmusNavUnit = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.18, 0.9), receiverCapMat);
+      atsmusNavUnit.position.set(0, 0.28, -0.1);
+      droneRig.add(atsmusNavUnit);
+
+      const rotorBlades = [];
+      const armSpanX = 2.1;
+      const armSpanZ = 1.9;
+      const armConfigs = [
+        { x: armSpanX, z: -armSpanZ, light: 0x10B981 },
+        { x: -armSpanX, z: -armSpanZ, light: 0xef4444 },
+        { x: armSpanX, z: armSpanZ, light: 0x00E5FF },
+        { x: -armSpanX, z: armSpanZ, light: 0x00E5FF }
+      ];
+
+      armConfigs.forEach(cfg => {
+        const armLength = Math.sqrt(cfg.x * cfg.x + cfg.z * cfg.z);
+        const armAngle = Math.atan2(cfg.z, cfg.x);
+        
+        const armTube = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.09, armLength, 8), carbonArmMat);
+        armTube.rotation.z = Math.PI / 2;
+        armTube.rotation.y = -armAngle;
+        armTube.position.set(cfg.x * 0.5, -0.04, cfg.z * 0.5);
+        droneRig.add(armTube);
+
+        const motorPod = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.28, 0.36, 16), motorBellMat);
+        motorPod.position.set(cfg.x, 0.08, cfg.z);
+        droneRig.add(motorPod);
+
+        const rotorAssembly = new THREE.Group();
+        rotorAssembly.position.set(cfg.x, 0.28, cfg.z);
+
+        const bladeMesh = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.025, 2.2), bladeMat);
+        rotorAssembly.add(bladeMesh);
+
+        const blurRotorDisc = new THREE.Mesh(
+          new THREE.RingGeometry(0.12, 1.15, 32), 
+          new THREE.MeshBasicMaterial({ color: 0x94a3b8, transparent: true, opacity: 0.32, side: THREE.DoubleSide })
+        );
+        blurRotorDisc.rotation.x = Math.PI / 2;
+        rotorAssembly.add(blurRotorDisc);
+
+        droneRig.add(rotorAssembly);
+        rotorBlades.push(rotorAssembly);
+      });
+
+      scene.add(droneRig);
+
+      const navBeamMat = new THREE.LineDashedMaterial({ color: 0x00E5FF, dashSize: 0.8, gapSize: 0.4, transparent: true, opacity: 0.85 });
+      const navBeam = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]), navBeamMat);
+      scene.add(navBeam);
+
+      const targetReticle = new THREE.Mesh(new THREE.RingGeometry(2.0, 2.2, 32), new THREE.MeshBasicMaterial({ color: 0x00E5FF, side: THREE.DoubleSide, transparent: true, opacity: 0.45 }));
+      targetReticle.rotation.x = Math.PI / 2;
+      scene.add(targetReticle);
+
+      let mouseX = 0;
+      let mouseY = 0;
+      window.addEventListener('mousemove', (e) => {
+        mouseX = (e.clientX - window.innerWidth / 2) * 0.0003;
+        mouseY = (e.clientY - window.innerHeight / 2) * 0.0003;
+      });
+
+      const clock = new THREE.Clock();
+
+      function animate() {
+        requestAnimationFrame(animate);
+        const t = clock.getElapsedTime();
+
+        const kPos = kineticGeo.attributes.position.array;
+        let index = 0;
+        for (let ix = 0; ix < countX; ix++) {
+          for (let iz = 0; iz < countZ; iz++) {
+            const x = kPos[index * 3];
+            const z = kPos[index * 3 + 2];
+            kPos[index * 3 + 1] = -7.5 + Math.sin((x + t * 2.8) * 0.09) * 2.2 + Math.cos((z + t * 2.1) * 0.09) * 2.2;
+            index++;
+          }
+        }
+        kineticGeo.attributes.position.needsUpdate = true;
+        kineticParticles.rotation.y = t * 0.012 + mouseX;
+
+        rotorBlades.forEach((rotor, idx) => {
+          rotor.rotation.y += (idx % 2 === 0 ? 0.45 : -0.45);
+        });
+
+        const beaconIntensity = Math.sin(t * 4.2) > 0.25 ? 3.6 : 0.35;
+        beaconHalo.intensity = beaconIntensity;
+        beaconLight.scale.setScalar(beaconIntensity > 1 ? 1.25 : 0.85);
+
+        const orbitSpeed = t * 0.55;
+        const dronePathX = towerX + Math.sin(orbitSpeed) * 16;
+        const dronePathZ = towerZ + Math.cos(orbitSpeed) * 26 + 6;
+        const dronePathY = 6.0 + Math.sin(orbitSpeed * 2) * 2.5 + Math.cos(orbitSpeed) * 1.5;
+
+        const velX = Math.cos(orbitSpeed) * 16;
+        const velZ = -Math.sin(orbitSpeed) * 26;
+
+        droneRig.position.set(dronePathX, dronePathY, dronePathZ);
+        droneRig.rotation.y = Math.atan2(velX, velZ) + Math.PI;
+        droneRig.rotation.z = -velX * 0.035;
+        droneRig.rotation.x = THREE.MathUtils.clamp(velZ * 0.035, -0.25, 0.25);
+
+        targetReticle.position.set(dronePathX, -7.45, dronePathZ);
+        targetReticle.rotation.z = t * 0.8;
+        const distFromCam = Math.max(0.6, (60 - dronePathZ) / 50);
+        targetReticle.scale.setScalar(1 / distFromCam);
+
+        const mastApex = new THREE.Vector3(towerX, towerHeight - 7.5 + 1.2, towerZ);
+        const droneAntenna = new THREE.Vector3(dronePathX, dronePathY + 0.28, dronePathZ);
+        navBeam.geometry.setFromPoints([mastApex, droneAntenna]);
+        navBeam.computeLineDistances();
+
+        waveRings.forEach((ring, idx) => {
+          const waveScale = ((t * 8.0 + idx * 4.8) % 26);
+          ring.scale.set(waveScale, waveScale, 1);
+          ring.material.opacity = Math.max(0, 0.48 - (waveScale / 26));
+        });
+
+        camera.position.x += (mouseX * 12 - camera.position.x) * 0.04;
+        camera.position.y += (14 - mouseY * 8 - camera.position.y) * 0.04;
+        camera.lookAt(4, 2, 0);
+
+        renderer.render(scene, camera);
+      }
+      animate();
+
+      window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+    })();
+
+    // -------------------------------------------------------------
+    // 3. ATSMUS AIR™ MINI TELEMETRY SIMULATION
+    // -------------------------------------------------------------
+    (function initAirNav() {
+      const canvas = document.getElementById('airNavCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+
+      function resize() {
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width * window.devicePixelRatio;
+        canvas.height = rect.height * window.devicePixelRatio;
+        ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      let t = 0;
+      const towers = [
+        { x: 60, y: 35 },
+        { x: 220, y: 25 },
+        { x: 340, y: 70 },
+        { x: 120, y: 110 },
+        { x: 280, y: 105 }
+      ];
+
+      function render() {
+        const w = canvas.getBoundingClientRect().width;
+        const h = canvas.getBoundingClientRect().height;
+
+        ctx.clearRect(0, 0, w, h);
+
+        towers.forEach(tw => {
+          ctx.fillStyle = '#64748b';
+          ctx.beginPath(); ctx.arc(tw.x, tw.y, 3, 0, Math.PI * 2); ctx.fill();
+
+          ctx.strokeStyle = 'rgba(0, 229, 255, 0.15)';
+          const r = (t * 18 + tw.x) % 55;
+          ctx.beginPath(); ctx.arc(tw.x, tw.y, r, 0, Math.PI * 2); ctx.stroke();
+        });
+
+        const curX = 30 + ((t * 18) % (w - 60));
+        const curY = h / 2 + Math.sin(curX * 0.025) * 22;
+
+        ctx.strokeStyle = 'rgba(0, 229, 255, 0.4)';
+        ctx.setLineDash([2, 2]);
+        ctx.beginPath();
+        ctx.moveTo(30, h / 2);
+        for (let px = 30; px < w - 30; px += 10) {
+          ctx.lineTo(px, h / 2 + Math.sin(px * 0.025) * 22);
+        }
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        towers.forEach(tw => {
+          ctx.strokeStyle = 'rgba(0, 229, 255, 0.2)';
+          ctx.beginPath(); ctx.moveTo(tw.x, tw.y); ctx.lineTo(curX, curY); ctx.stroke();
+        });
+
+        ctx.fillStyle = '#00E5FF';
+        ctx.beginPath(); ctx.arc(curX, curY, 4.5, 0, Math.PI * 2); ctx.fill();
+
+        t += 0.03;
+        requestAnimationFrame(render);
+      }
+      render();
+    })();
+
+    // -------------------------------------------------------------
+    // 4. ATSMUS PDDR™ MINI RADAR SCOPE
+    // -------------------------------------------------------------
+    (function initPDDRRadar() {
+      const canvas = document.getElementById('pddrRadarCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let angle = 0;
+
+      function draw() {
+        const w = canvas.width;
+        const h = canvas.height;
+        const cx = w / 2;
+        const cy = h / 2;
+
+        ctx.fillStyle = 'rgba(2, 4, 8, 0.25)';
+        ctx.fillRect(0, 0, w, h);
+
+        ctx.strokeStyle = 'rgba(255, 153, 0, 0.15)';
+        ctx.lineWidth = 1;
+        for (let r = 25; r < cx; r += 32) {
+          ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.stroke();
+        }
+
+        const sweepX = cx + Math.cos(angle) * (cx - 10);
+        const sweepY = cy + Math.sin(angle) * (cy - 10);
+
+        ctx.strokeStyle = 'rgba(255, 153, 0, 0.5)';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(sweepX, sweepY); ctx.stroke();
+
+        const tx = cx + Math.cos(1.2) * 65;
+        const ty = cy + Math.sin(1.2) * 65;
+        const diff = Math.abs(angle % (Math.PI * 2) - 1.2);
+
+        if (diff < 0.25 || diff > (Math.PI * 2 - 0.25)) {
+          ctx.fillStyle = '#FF9900';
+          ctx.beginPath(); ctx.arc(tx, ty, 4, 0, Math.PI * 2); ctx.fill();
+        }
+
+        angle += 0.035;
+        requestAnimationFrame(draw);
+      }
+      draw();
+    })();
+
+    // -------------------------------------------------------------
+    // 5. DEEP DIVE ARCHITECTURAL SUB-VIEW CONTROLLER
+    // -------------------------------------------------------------
+    const deepDiveModal = document.getElementById('deepDiveModal');
+    const deepDiveContent = document.getElementById('deepDiveContent');
+
+    const deepDiveData = {
+      air: {
+        tag: "MISSION ASSURANCE ARCHITECTURE",
+        title: "ATSMUS AIR™ SDR Navigation System",
+        subtitle: "Mission-Assured PNT for GPS-Denied & Contested Electronic Warfare (EW) Environments",
+        body: `
+          <div class="space-y-6 text-slate-300 text-sm font-light leading-relaxed">
+            <p>
+              When adversaries deploy GNSS jamming or spoofing, tactical uncrewed systems lose navigation lock. ATSMUS AIR processes downlink synchronization signals from ambient commercial masts to calculate true position without satellites.
+            </p>
+
+            <div class="p-5 rounded-2xl bg-brand-void border border-white/10 font-mono text-xs">
+              <div class="text-brand-cyan font-bold mb-3 uppercase tracking-wider">SDR Signal Processing Pipeline:</div>
+              <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 text-center">
+                <div class="p-3 rounded-lg bg-white/[0.02] border border-white/10">
+                  <div class="text-slate-400 text-[10px]">1. RF FRONT-END</div>
+                  <div class="text-white font-bold mt-1">70 MHz - 6 GHz</div>
+                </div>
+                <div class="p-3 rounded-lg bg-white/[0.02] border border-white/10">
+                  <div class="text-slate-400 text-[10px]">2. SYNC & PSS</div>
+                  <div class="text-brand-cyan font-bold mt-1">CRS / CIR Decode</div>
+                </div>
+                <div class="p-3 rounded-lg bg-white/[0.02] border border-white/10">
+                  <div class="text-slate-400 text-[10px]">3. AIRT™ AI ENGINE</div>
+                  <div class="text-brand-emerald font-bold mt-1">4D Ray Modeling</div>
+                </div>
+                <div class="p-3 rounded-lg bg-white/[0.02] border border-white/10">
+                  <div class="text-slate-400 text-[10px]">4. PNT FIX</div>
+                  <div class="text-white font-bold mt-1">&lt; 8.9m CE90</div>
+                </div>
+              </div>
+            </div>
+
+            <h4 class="font-display text-white text-lg font-medium pt-2">Key Operational Advantages</h4>
+            <ul class="space-y-2 font-mono text-xs text-slate-300">
+              <li>• <span class="text-white font-bold">Uncooperative Border Operation:</span> Uses MAP-SLAM to automatically locate and reverse-engineer unknown cell towers across hostile borders.</li>
+              <li>• <span class="text-white font-bold">Assisted-TDOA Fusion:</span> Combines RF signal pattern correlation with microsecond timing difference of arrival for high-speed airborne tracking.</li>
+              <li>• <span class="text-white font-bold">Low-SWaP OEM Integration:</span> Lightweight software-defined radio module ready for standard MAVLink, ROS 2, ArduPilot, and PX4 autopilot buses.</li>
+            </ul>
+
+            <div class="grid grid-cols-3 gap-4 font-mono text-xs pt-2">
+              <div class="p-4 rounded-xl bg-white/[0.02] border border-white/10">
+                <div class="text-slate-400 uppercase text-[10px]">RF EMISSIONS</div>
+                <div class="text-brand-emerald font-bold text-sm mt-1">0.00 W (Silent)</div>
+              </div>
+              <div class="p-4 rounded-xl bg-white/[0.02] border border-white/10">
+                <div class="text-slate-400 uppercase text-[10px]">SPECTRUM BAND</div>
+                <div class="text-brand-cyan font-bold text-sm mt-1">70 MHz - 6 GHz</div>
+              </div>
+              <div class="p-4 rounded-xl bg-white/[0.02] border border-white/10">
+                <div class="text-slate-400 uppercase text-[10px]">FLIGHT STATUS</div>
+                <div class="text-brand-amber font-bold text-sm mt-1">TRL-6 Ready</div>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      pddr: {
+        tag: "AIR DEFENSE ARCHITECTURE",
+        title: "ATSMUS PDDR™ Passive Bistatic Radar",
+        subtitle: "Covert Counter-UAS (C-UAS) Threat Detection Without Electromagnetic Emissions",
+        body: `
+          <div class="space-y-6 text-slate-300 text-sm font-light leading-relaxed">
+            <p>
+              Traditional active air defense radars transmit high-power electromagnetic pulses, revealing their location to enemy SIGINT systems. ATSMUS PDDR is a 100% passive bistatic radar that exploits ambient commercial LTE and 5G cellular downlinks as illuminators of opportunity.
+            </p>
+
+            <div class="p-5 rounded-2xl bg-brand-void border border-white/10 font-mono text-xs">
+              <div class="text-brand-amber font-bold mb-3 uppercase tracking-wider">Two-Channel Coherent Architecture:</div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="p-4 rounded-xl bg-white/[0.02] border border-white/10">
+                  <div class="text-brand-emerald font-bold text-xs mb-1">1. REFERENCE ANTENNA CHANNEL</div>
+                  <p class="text-slate-400 text-[11px]">Captures a pristine reference copy of local cellular base station waveforms.</p>
+                </div>
+                <div class="p-4 rounded-xl bg-white/[0.02] border border-white/10">
+                  <div class="text-brand-amber font-bold text-xs mb-1">2. SURVEILLANCE SEARCH CHANNEL</div>
+                  <p class="text-slate-400 text-[11px]">Monitors the airspace for radio reflections bouncing off incoming drone hulls and rotors.</p>
+                </div>
+              </div>
+            </div>
+
+            <h4 class="font-display text-white text-lg font-medium pt-2">Kinematic Target Classification</h4>
+            <ul class="space-y-2 font-mono text-xs text-slate-300">
+              <li>• <span class="text-white font-bold">Cross-Ambiguity Range-Doppler Matrix:</span> Cancels direct clutter and generates high-fidelity delay-Doppler target maps.</li>
+              <li>• <span class="text-white font-bold">Micro-Doppler Rotor Analysis:</span> Distinguishes small multirotors from birds and environmental clutter by analyzing propeller blade Doppler shifts.</li>
+              <li>• <span class="text-white font-bold">Zero Regulatory Permitting:</span> Non-emitting operation allows immediate deployment around civil airports and critical borders.</li>
+            </ul>
+          </div>
+        `
+      },
+      flightReport: {
+        tag: "FLIGHT VALIDATION REPORT",
+        title: "Flight Validation & Airborne Telemetry Log",
+        subtitle: "Live Helicopter & Mountainous Alpine Flight Trials (Ontario & British Columbia)",
+        body: `
+          <div class="space-y-6 text-slate-300 text-sm font-light leading-relaxed">
+            <p>
+              ATSMUS cellular positioning has been validated across rigorous flight test campaigns under operational conditions without satellite assistance:
+            </p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 font-mono text-xs">
+              <div class="p-4 rounded-xl bg-white/[0.02] border border-white/10">
+                <div class="text-slate-400 uppercase text-[10px]">MEASURED ACCURACY</div>
+                <div class="text-brand-emerald font-bold text-base mt-1">8.9 Meters</div>
+                <div class="text-slate-500 text-[10px] mt-1">Collingwood helicopter fix</div>
+              </div>
+              <div class="p-4 rounded-xl bg-white/[0.02] border border-white/10">
+                <div class="text-slate-400 uppercase text-[10px]">ALPINE TRAVERSE</div>
+                <div class="text-brand-cyan font-bold text-base mt-1">400 Kilometers</div>
+                <div class="text-slate-500 text-[10px] mt-1">British Columbia mountain route</div>
+              </div>
+              <div class="p-4 rounded-xl bg-white/[0.02] border border-white/10">
+                <div class="text-slate-400 uppercase text-[10px]">ALTITUDE TESTED</div>
+                <div class="text-brand-amber font-bold text-base mt-1">4,000 Meters</div>
+                <div class="text-slate-500 text-[10px] mt-1">High-altitude cellular lock</div>
+              </div>
+            </div>
+
+            <p class="text-xs text-slate-400">
+              During 400–600m altitude helicopter maneuvers over Ontario, ATSMUS Air processed downlink synchronization signals from standard commercial masts, maintaining continuous real-time track concordance against reference RTK truth data.
+            </p>
+          </div>
+        `
+      }
+    };
+
+    function openDeepDive(key) {
+      const data = deepDiveData[key];
+      if (!data) return;
+
+      deepDiveContent.innerHTML = `
+        <div class="text-xs font-mono text-brand-cyan uppercase tracking-widest mb-2 font-semibold">${data.tag}</div>
+        <h3 class="font-display font-light text-2xl sm:text-3xl text-white mb-2">${data.title}</h3>
+        <div class="text-slate-400 font-mono text-xs mb-5">${data.subtitle}</div>
+        ${data.body}
+        <div class="pt-5 mt-6 border-t border-white/10 flex items-center justify-between">
+          <a href="#contact" onclick="closeDeepDive()" class="px-6 py-2.5 rounded-full bg-brand-cyan text-black font-mono text-xs font-semibold uppercase tracking-wider hover:bg-white transition-colors">
+            Request Technical Data Package (TDP) →
+          </a>
+          <button onclick="closeDeepDive()" class="text-slate-400 font-mono text-xs hover:text-white uppercase">
+            Close View
+          </button>
+        </div>
+      `;
+      deepDiveModal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+      lucide.createIcons();
+    }
+
+    function closeDeepDive() {
+      deepDiveModal.classList.add('hidden');
+      document.body.style.overflow = 'auto';
+    }
+
+    deepDiveModal.addEventListener('click', (e) => {
+      if (e.target === deepDiveModal) closeDeepDive();
+    });
+  </script>
+
+</body>
+</html>
